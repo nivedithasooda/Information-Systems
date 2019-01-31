@@ -1,8 +1,10 @@
-
+import subprocess
 import redis
-from py2neo import Graph, Node, Relationship
+
 
 rd = redis.Redis("localhost")
+
+from py2neo import Graph, Node, Relationship
 graphHost='localhost'
 graphUser = "neo4j"
 graphPassphrase = "chinmay007"
@@ -105,8 +107,9 @@ def game(x):
                         previous_event = {y:rd.hgetall(x)[y]}
                         checked_items.append(y)
                 tmp = len(rd.hgetall(x))
-        print(rd.hgetall(x)[b'end'])
-        #neo4j({b'end':rd.hgetall(x)[b'end']})
+        #print(rd.hgetall(x)[b'end'])
+        neo4j({b'end':rd.hgetall(x)[b'end']},x)
+
 def end(key,value,graph,home_team,away_team):
     graph.run("MATCH (p:Player)-[r:PLAYS]-(g:Game {name:'"+home_team+" v/s "+away_team+"'}) SET r.out_time = '"+key+"'")
 
@@ -153,17 +156,17 @@ def neo4j(x,game):
         print("Yellow Card")
         cards(key,value,graph,home_team,away_team)
         print("Executed CARDS")
-    elif("GOAL" in value):
+    elif("GOAL" in value or "SCORES" in value):
         print("Goal Scored")
         goals_assists(key,value,graph,home_team,away_team)
         print("Executed GOALS")
     elif("PASSED" in value):
         passed(key,value,graph,home_team,away_team)
         print("Executed PASSED")
-    elif("TACKLED" in value):
+    elif("TACKLED" in value or "INTERCEPTED" in value or "BLOCKED" in value):
         tackled(key,value,graph,home_team,away_team)
         print("Executed TACKLED")
-    elif("GOAL_SAVED" in value):
+    elif("GOAL_SAVED" in value or "SAVED" in value):
         goals_saved(key,value,graph,home_team,away_team)
         print("Executed GOALS_SAVED")
     elif("FOUL" in value):
@@ -179,7 +182,7 @@ def neo4j(x,game):
         print("Game Ended")
         end(key,value,graph,home_team,away_team)
         print("Executed GAME ENDED")
-    elif("CHANCE" in value):
+    elif("CHANCE" in value or "CROSSED" in value):
         chance(key,value,graph,home_team,away_team)
         print("Executed Chances")
     elif("SHOOTS" in value):
@@ -188,11 +191,8 @@ def neo4j(x,game):
     else:
         print("Game continues...")
 
-
-
-
-
 game("Manchester United_Arsenal")
+subprocess.run(["python","match_stats.py","Manchester United_Arsenal"])
 
 
 
