@@ -18,7 +18,7 @@ def calc_stats(team,players):
         team = team.replace(" ","_")
     
     for p in players:
-        graph.run("MATCH (p:Player {name:'"+p+"'})-[q:PLAYS]-(g:Game {name:'"+sys.argv[1].split("_")[0]+" v/s "+sys.argv[1].split("_")[1]+"'}) SET g."+team+"_fouls = g."+team+"_fouls + q.fouls, g."+team+"_totalShots = g."+team+"_totalShots + q.shots, g."+team+"_yellowCards = g."+team+"_yellowCards + q.yellow_cards, g."+team+"_redCards = g."+team+"_redCards + q.red_cards, g."+team+"_possession = g."+team+"_possession + q.dribbles")
+        graph.run("MATCH (p:Player {name:'"+p+"'})-[q:PLAYS]-(g:Game {name:'"+sys.argv[1].split("_")[0]+" v/s "+sys.argv[1].split("_")[1]+"'}) SET g."+team+"_fouls = g."+team+"_fouls + q.fouls, g."+team+"_totalShots = g."+team+"_totalShots + q.shots, g."+team+"_yellowCards = g."+team+"_yellowCards + q.yellow_cards, g."+team+"_redCards = g."+team+"_redCards + q.red_cards")
 
 def findWinner(home_team,home_players,away_team,away_players):
     home_sum = 0
@@ -26,7 +26,7 @@ def findWinner(home_team,home_players,away_team,away_players):
     for p in home_players:
         for g in graph.run("MATCH (p:Player {name:'"+p+"'})-[q:PLAYS]-(g:Game {name:'"+sys.argv[1].split("_")[0]+" v/s "+sys.argv[1].split("_")[1]+"'}) return q.goals as goals"):
             home_sum = home_sum + g["goals"]
-    for p in home_players:
+    for p in away_players:
         for g in graph.run("MATCH (p:Player {name:'"+p+"'})-[q:PLAYS]-(g:Game {name:'"+sys.argv[1].split("_")[0]+" v/s "+sys.argv[1].split("_")[1]+"'}) return q.goals as goals"):
             away_sum = away_sum + g["goals"]
     winner = ''

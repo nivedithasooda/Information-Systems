@@ -68,14 +68,25 @@ def convert(previous):
          # return str(previous[ele],'utf-8')
 
 
-def check_previous_event(current,previous,x):
+def check_previous_event(current,previous,x,events,home_events,away_events):
     previous_key,previous_value = convert(previous)
     
     current_key = int(str(current,'utf-8'))
     
+
+
+
     #previous_value = convert(current,previous)
    # print(type(previous_value))
     if("DRIBBLES" in previous_value):
+        for club in graph.run("MATCH (p:Player {name:'"+previous_value.split("_")[0]+"'})-[q:BELONGS_TO]-(c:Club) return c.name as name"):
+            club_name = club["name"]
+        if(club_name == x.split("_")[0]):
+            home_events = home_events + 1
+        else:
+            away_events = away_events + 1    
+        events = events + 1
+        
         print("CK {}".format(type(current_key)))
         print("PK {}".format(previous_key))
         diff = current_key - int(previous_key)
@@ -83,11 +94,12 @@ def check_previous_event(current,previous,x):
         print("The difference is {}".format(diff))
         player = previous_value.split("_")[0]
         graph.run("MATCH (p:Player {name:'"+player+"'})-[r:PLAYS]-(g:Game {name:'"+x.split("_")[0]+" v/s "+x.split("_")[1]+"'}) SET r.dribbles = r.dribbles + "+str(diff)+"")
-        
+    return events,home_events,away_events
 
 
 def game(x):
     checked_items=[]
+    events,home_events,away_events = 0,0,0
     print(str(rd.keys()[0], 'utf-8'))
     flag = False
     print(str(rd.keys()[0], 'utf-8') == x)
@@ -108,8 +120,8 @@ def game(x):
                     if(y not in checked_items):
                         #print(y,rd.hgetall(x)[y])
                         if previous_event!={}:
-                            check_previous_event(y,previous_event,x)
-                        neo4j({y:rd.hgetall(x)[y]},x)
+                            events,home_events,away_events = check_previous_event(y,previous_event,x,events,home_events,away_events)
+                        events,home_events,away_events = neo4j({y:rd.hgetall(x)[y]},x,events,home_events,away_events)
                         print(str(rd.hgetall(x)[y],'utf-8'))
                         if(str(rd.hgetall(x)[y],'utf-8') == "game end"):
                             print("About to brake")
@@ -158,7 +170,7 @@ def shot(key,value,graph,home_team,away_team):
     player = value.split("_")[0]
     graph.run("MATCH (p:Player {name:'"+player+"'})-[r:PLAYS]-(g:Game {name:'"+home_team+" v/s "+away_team+"'}) SET r.shots = r.shots + 1")
 
-def neo4j(x,game):
+def neo4j(x,game,events,home_events,away_events):
     
     home_team = game.split("_")[0]
     away_team = game.split("_")[1]
@@ -178,21 +190,56 @@ def neo4j(x,game):
         print("Executed CARDS")
     elif("GOAL" in value or "SCORES" in value):
         print("Goal Scored")
+        for club in graph.run("MATCH (p:Player {name:'"+value.split("_")[0]+"'})-[q:BELONGS_TO]-(c:Club) return c.name as name"):
+            club_name = club["name"]
+        if(club_name == home_team):
+            home_events = home_events + 1
+        else:
+            away_events = away_events + 1    
+        events = events + 1
         goals_assists(key,value,graph,home_team,away_team)
         print("Executed GOALS")
     elif("PASSED" in value):
+        for club in graph.run("MATCH (p:Player {name:'"+value.split("_")[0]+"'})-[q:BELONGS_TO]-(c:Club) return c.name as name"):
+            club_name = club["name"]
+        if(club_name == home_team):
+            home_events = home_events + 1
+        else:
+            away_events = away_events + 1    
+        events = events + 1
         passed(key,value,graph,home_team,away_team)
         print("Executed PASSED")
     elif("TACKLED" in value or "INTERCEPTED" in value or "BLOCKED" in value):
+        for club in graph.run("MATCH (p:Player {name:'"+value.split("_")[0]+"'})-[q:BELONGS_TO]-(c:Club) return c.name as name"):
+            club_name = club["name"]
+        if(club_name == home_team):
+            home_events = home_events + 1
+        else:
+            away_events = away_events + 1    
+        events = events + 1
         tackled(key,value,graph,home_team,away_team)
         print("Executed TACKLED")
     elif("GOAL_SAVED" in value or "SAVED" in value):
+        for club in graph.run("MATCH (p:Player {name:'"+value.split("_")[0]+"'})-[q:BELONGS_TO]-(c:Club) return c.name as name"):
+            club_name = club["name"]
+        if(club_name == home_team):
+            home_events = home_events + 1
+        else:
+            away_events = away_events + 1    
+        events = events + 1
         goals_saved(key,value,graph,home_team,away_team)
         print("Executed GOALS_SAVED")
     elif("FOUL" in value):
         fouls(key,value,graph,home_team,away_team)
         print("Executed Fouls")
     elif("CORNER" in value):
+        for club in graph.run("MATCH (p:Player {name:'"+value.split("_")[0]+"'})-[q:BELONGS_TO]-(c:Club) return c.name as name"):
+            club_name = club["name"]
+        if(club_name == home_team):
+            home_events = home_events + 1
+        else:
+            away_events = away_events + 1    
+        events = events + 1
         for club in graph.run("MATCH (p:Player {name:'"+value.split('_')[0]+"'})-[s:BELONGS_TO]->(c:Club),(p:Player {name:'"+value.split('_')[0]+"'})-[q:PLAYS]->(r:Game {name:'"+home_team+" v/s "+away_team+"'}) return c.name as name"):
             club_name = club["name"]
         if(" " in club_name):
@@ -209,17 +256,34 @@ def neo4j(x,game):
         print("Executed Foulss")
     elif("end" in value):
         print("Game Ended")
+        print(home_events,away_events,events)
         end(key,value,graph,home_team,away_team)
+        graph.run("MATCH (g:Game {name:'"+home_team+" v/s "+away_team+"'}) SET g."+RemoveSpaceTeam(home_team)+"_possession = "+str((home_events/events))+" * 100")
+        graph.run("MATCH (g:Game {name:'"+home_team+" v/s "+away_team+"'}) SET g."+RemoveSpaceTeam(away_team)+"_possession = "+str((away_events/events))+" * 100")
         print("Executed GAME ENDED")
     elif("CHANCE" in value or "CROSSED" in value):
+        for club in graph.run("MATCH (p:Player {name:'"+value.split("_")[0]+"'})-[q:BELONGS_TO]-(c:Club) return c.name as name"):
+            club_name = club["name"]
+        if(club_name == home_team):
+            home_events = home_events + 1
+        else:
+            away_events = away_events + 1    
+        events = events + 1
         chance(key,value,graph,home_team,away_team)
         print("Executed Chances")
     elif("SHOOTS" in value):
+        for club in graph.run("MATCH (p:Player {name:'"+value.split("_")[0]+"'})-[q:BELONGS_TO]-(c:Club) return c.name as name"):
+            club_name = club["name"]
+        if(club_name == home_team):
+            home_events = home_events + 1
+        else:
+            away_events = away_events + 1    
+        events = events + 1
         shot(key,value,graph,home_team,away_team)
         print("Executed Shots")
     else:
         print("Game ontinue")
-    
+    return events,home_events,away_events
 
 game("Manchester United_Arsenal")
 print("Now executing next script")
