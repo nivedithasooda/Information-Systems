@@ -52,6 +52,23 @@ def findWinnerAndCalcPerf(home_team,home_players,away_team,away_players):
     graph.run("MATCH (g:Game {name:'"+sys.argv[1].split("_")[0]+" v/s "+sys.argv[1].split("_")[1]+"'}) SET g.score = '"+home_team+" "+str(home_sum)+"  -  "+str(away_sum)+" "+away_team+"', g.winner = '"+winner+"'")
     return perf_home,perf_away
 
+def calcManOfTheMatch(home,away):
+    motm = ()
+    for h in home:
+        if(motm == ()):
+            motm = (h,home[h])
+        else:
+            if(motm[1]<home[h]):
+                motm = (h,home[h])
+    
+    for a in away:
+        if(motm == ()):
+            motm = (h,home[h])
+        else:
+            if(motm[1]<home[h]):
+                motm = (h,home[h])
+
+    return motm
 
 home_team = sys.argv[1].split("_")[0]
 away_team = sys.argv[1].split("_")[1]
@@ -63,11 +80,8 @@ calc_stats(home_team,home_players)
 calc_stats(away_team,away_players)
 perf_home,perf_away = findWinnerAndCalcPerf(home_team,home_players,away_team,away_players)
 
-for a in perf_home:
-    print("The name of the player is {} and his performance is {}".format(a,perf_home[a]))
-
-for a in perf_away:
-    print("The name of the player is {} and his performance is {}".format(a,perf_away[a]))
+manOfTheMatch = calcManOfTheMatch(perf_home,perf_away)
+print("Man of the match is {}".format(manOfTheMatch))
 
 
 
