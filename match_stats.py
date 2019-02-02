@@ -41,10 +41,14 @@ def findWinnerAndCalcPerf(home_team,home_players,away_team,away_players):
     winner = ''
     if(home_sum > away_sum):
         winner = home_team
+        graph.run("MATCH(c:Club {name:'"+home_team+"'})-[b:PARTICIPATES_IN]-(s:Season) set c.pointsWon = c.pointsWon + 3")
     elif(home_sum == away_sum):
         winner = "DRAW"
+        graph.run("MATCH(c:Club {name:'"+home_team+"'})-[b:PARTICIPATES_IN]-(s:Season) set c.pointsWon = c.pointsWon + 1")
+        graph.run("MATCH(c:Club {name:'"+away_team+"'})-[b:PARTICIPATES_IN]-(s:Season) set c.pointsWon = c.pointsWon + 1")
     else:
         winner = away_team
+        graph.run("MATCH(c:Club {name:'"+away_team+"'})-[b:PARTICIPATES_IN]-(s:Season) set c.pointsWon = c.pointsWon + 3")
     graph.run("MATCH (g:Game {name:'"+sys.argv[1].split("_")[0]+" v/s "+sys.argv[1].split("_")[1]+"'}) SET g.score = '"+home_team+" "+str(home_sum)+"  -  "+str(away_sum)+" "+away_team+"', g.winner = '"+winner+"'")
     return perf_home,perf_away
 
