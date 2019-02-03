@@ -1,3 +1,4 @@
+
 use FootballDBMongo
 
 
@@ -134,7 +135,7 @@ db.createCollection("MilestoneGoals")
 
 db.createCollection("ManagerStats")
 
-db.ManagerStats.insertOne({managerName: "Unai Emery" , NumberOfMatches: "24" , NumberOfWins: "14" , ManagerOfTheMonthAward: "0" })
-db.ManagerStats.insertOne({managerName: "Maurizio Sarri" , NumberOfMatches: "24" , NumberOfWins: "14" , ManagerOfTheMonthAward: "0" })
-db.ManagerStats.insertOne({managerName: "Jurgen Klopp" , NumberOfMatches: "130" , NumberOfWins: "75" , ManagerOfTheMonthAward: [{year:"2017"} , {year:"2018"}] })
-db.ManagerStats.insertOne({managerName: "Ole Gunnar Solskjaer" , NumberOfMatches: "25" , NumberOfWins: "9" , ManagerOfTheMonthAward: "0" })
+db.ManagerStats.insertOne({managerName: "Unai Emery" , NumberOfMatches: "24" , NumberOfWins: "14" , ManagerOfTheMonthAward: "0"  , Contract: [{"year" : 2018 , "Team" : "Arsenal" , "salary": "190000"} , {"year" : 2017 , "Team" : "Manchester United" , "salary": "120000"}]})
+db.ManagerStats.insertOne({managerName: "Maurizio Sarri" , NumberOfMatches: "24" , NumberOfWins: "14" , ManagerOfTheMonthAward: "0" , Contract: [{"year" : 2018 , "Team" : "Chelsea" , "salary": "180000"} , {"year" : 2017 , "Team" : "Liverpool" , "salary": "110000"}] })
+db.ManagerStats.insertOne({managerName: "Jurgen Klopp" , NumberOfMatches: "130" , NumberOfWins: "75" , ManagerOfTheMonthAward: [{year:"2017"} , {year:"2018"}] , Contract: [{"year" : 2018 , "Team" : "Liverpool" , "salary": "170000"} , {"year" : 2017 , "Team" : "Chelsea" , "salary": "130000"}] })
+db.ManagerStats.insertOne({managerName: "Ole Gunnar Solskjaer" , NumberOfMatches: "25" , NumberOfWins: "9" , ManagerOfTheMonthAward: "0" , Contract: [{"year" : 2018 , "Team" : "Manchester United" , "salary": "150000"} , {"year" : 2017 , "Team" : "Arsenal" , "salary": "140000"}]})
