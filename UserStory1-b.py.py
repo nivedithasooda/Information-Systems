@@ -10,7 +10,7 @@ userInputTeam = input("Enter the team name : ")
 queryString_partOne = {}
 
 queryString_partOne = {"name": userInputTeam}
-queryString_partTwo = {"marketValue": 1, "_id": 0}
+queryString_partTwo = {"Budget": 1, "_id": 0}
 
 x = mydb.clubStats.find(queryString_partOne, queryString_partTwo)
 
@@ -31,4 +31,5 @@ for firstValue in x:
     print("---LIST OF SUITABLE ATTACKERS IN YOUR PRICE RANGE---")
     for eachDocument in sortedList:
         print(eachDocument)
+
 
