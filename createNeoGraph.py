@@ -2,11 +2,11 @@ from py2neo import Graph, Node, Relationship
 
 #CREATE SEASON
 def createSeasons(label,season,graph):#season
-        graph.run("CREATE (n:"+label+" {name:'Year"+season+"'})")
+        graph.run("CREATE (n:"+label+" {name:'Year"+season+"',goals:0})")
 
 #CREATE CLUB(AFTER CREATING SEASON)
 def createClubNodeAndrelations(label,club,year,season,graph):#club
-    graph.run("CREATE (n:"+label+" {name:'"+club+"', year: '"+year+"'})")
+    graph.run("CREATE (n:"+label+" {name:'"+club+"', year: '"+year+"',pointsWon:0})")
     graph.run("MATCH(p:"+label+" {name:'"+club+"', year: '"+year+"'}), (g:Season {name:'"+season+"'}) MERGE (p)-[s:PARTICIPATED_IN]->(g)")
   
 
@@ -22,7 +22,7 @@ def createPlayerNodeAndrelations(label,player,club,games,year,graph):#players
     graph.run("MATCH(p:"+label+" {name:'"+player+"', year:'"+year+"'}), (g:Club {name:'"+club+"', year:'"+year+"'}) MERGE (p)-[s:BELONGS_TO]->(g)")
     for game in games:
         graph.run("MATCH(p:"+label+" {name:'"+player+"', year:'"+year+"'}), (g:Game {name:'"+game+"'}) MERGE (p)-[s:PLAYS]->(g)")
-        graph.run("MATCH(p:"+label+" {name:'"+player+"', year:'"+year+"'})-[r:PLAYS]-(g:Game {name:'"+game+"'}) SET r.goals = 0, r.assists = 0, r.yellow_cards = 0, r.red_cards = 0, r.passes = 0, r.tackles = 0, r.goals_saved = 0, r.in_time = 0, r.out_time = 0, r.fouls = 0, r.dribbles = 0")
+        graph.run("MATCH(p:"+label+" {name:'"+player+"', year:'"+year+"'})-[r:PLAYS]-(g:Game {name:'"+game+"'}) SET r.goals = 0, r.assists = 0, r.yellowCards = 0, r.redCards = 0, r.passes = 0, r.tackles = 0, r.goalsSaved = 0, r.inTime = 0, r.outTime = 0, r.fouls = 0, r.dribbles = 0,r.shots=0,r.chances=0")
         
 def neo4jGraphFormation():
     graphHost='localhost'
@@ -219,5 +219,3 @@ def createNeoGraph():
     graph.run("MATCH(p:Season {name:'Year2017'}), (g:Season {name:'Year2018'}) MERGE (p)-[s:NEXT]->(g)")    
 
 createNeoGraph()
-
-    
