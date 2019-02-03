@@ -1,6 +1,6 @@
 import subprocess
 import redis
-
+import pymongo
 
 rd = redis.Redis("localhost")
 
@@ -9,6 +9,9 @@ graphHost='localhost'
 graphUser = "neo4j"
 graphPassphrase = "chinmay007"
 graph=Graph(bolt=True, host=graphHost, user=graphUser, password=graphPassphrase)
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["FootballDBMongo"]
+mycol = mydb["Milestones"]
 
 def RemoveSpaceTeam(home):
     if " " in home:
@@ -43,9 +46,12 @@ def cards(key,value,graph,home_team,away_team):
 
 def goals_assists(key,value,graph,home_team,away_team):
     # TO BE EXECUTED
+
     player_scored = value.split('_')[0]
     graph.run("MATCH(p:Player {name:'"+player_scored+"'})-[e:PLAYS]-(g:Game {name:'"+home_team+" v/s "+away_team+"'}) SET e.goals = e.goals + 1")
-    
+
+        
+
     if(len(value.split('_')) == 4):
         player_assisted = value.split('_')[2]
         graph.run("MATCH(p:Player {name:'"+player_assisted+"'})-[e:PLAYS]-(g:Game {name:'"+home_team+" v/s "+away_team+"'}) SET e.assists = e.assists + 1")
@@ -95,6 +101,38 @@ def check_previous_event(current,previous,x,events,home_events,away_events):
         player = previous_value.split("_")[0]
         graph.run("MATCH (p:Player {name:'"+player+"'})-[r:PLAYS]-(g:Game {name:'"+x.split("_")[0]+" v/s "+x.split("_")[1]+"'}) SET r.dribbles = r.dribbles + "+str(diff)+"")
     return events,home_events,away_events
+
+
+def checkMilestone(key,value,graph,home_team,away_team):
+    totalGoals = 0
+    for g in graph.run("MATCH (s:Season) return s.goals as goals"):
+        totalGoals = totalGoals + g["goals"]
+    totalGoals = totalGoals + 1
+    for g in graph.run("MATCH (p:Player {name:'"+value.split("_")[0]+"'})-[q:PLAYS]-(r:Game {name:'"+home_team+" v/s "+away_team+"'}), (p:Player {name:'"+value.split("_")[0]+"'})-[b:BELONGS_TO]-(c:Club), (r:Game)-[x:PART_OF]-(s:Season) set s.goals = s.goals + 1 return c.name as name"):
+
+        if(totalGoals % 2 == 0):
+            againstTeam = ''
+            print("Goal scored by {}".format(value.split("_")[0]))
+
+            print("Playing for {}".format(g["name"]))
+            if(g["name"] == home_team):
+                againstTeam = away_team
+                print("Against {}".format(away_team))
+            else:
+                againstTeam = home_team
+                print("Against {}".format(home_team))
+            print("At time {}".format(key))
+            print("This is goal number {}".format(totalGoals))
+            print("Milestone number {}".format(totalGoals // 2))
+            mycol.insert_one({str(totalGoals//2):{"Goal Number":totalGoals,"Scored By":value.split("_")[0],"Playing for":g["name"],"Against":againstTeam,"Minutes":key}})
+
+
+
+
+    
+    
+       
+
 
 
 def game(x):
@@ -189,6 +227,7 @@ def neo4j(x,game,events,home_events,away_events):
         cards(key,value,graph,home_team,away_team)
         print("Executed CARDS")
     elif("GOAL" in value or "SCORES" in value):
+        checkMilestone(key,value,graph,home_team,away_team)
         print("Goal Scored")
         for club in graph.run("MATCH (p:Player {name:'"+value.split("_")[0]+"'})-[q:BELONGS_TO]-(c:Club) return c.name as name"):
             club_name = club["name"]

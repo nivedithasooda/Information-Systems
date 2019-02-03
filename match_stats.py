@@ -49,7 +49,7 @@ def findWinnerAndCalcPerf(home_team,home_players,away_team,away_players):
                 x["RedCards"] = int(x["RedCards"]) + g["rcards"]
                 x["RedCards"] = int(x["RedCards"]) + g["rcards"]
                 x["Tackles"] = int(x["Tackles"]) + g["tackles"]
-                
+     #Need to check for 2017           
                 for min in x["MinutesPlayed"]:
 
                     if(min["year"] == "2018"):
