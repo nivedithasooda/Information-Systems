@@ -2,7 +2,9 @@ from py2neo import Graph, Node, Relationship
 
 #CREATE SEASON
 def createSeasons(label,season,graph):#season
+        previous=int(season)-1
         graph.run("CREATE (n:"+label+" {name:'Year"+season+"',goals:0})")
+        graph.run("OPTIONAL MATCH (node:Season {name:'Year"+str(previous)+"'}) WITH node MATCH (node),(m:Season {name:'Year"+season+"'}) merge (node)-[r:NEXT]->(m) RETURN (node)")
 
 #CREATE CLUB(AFTER CREATING SEASON)
 def createClubNodeAndrelations(label,club,year,season,graph):#club
@@ -27,7 +29,7 @@ def createPlayerNodeAndrelations(label,player,club,games,year,graph):#players
 def neo4jGraphFormation():
     graphHost='localhost'
     graphUser = "neo4j"
-    graphPassphrase = "chinmay007"
+    graphPassphrase = "test"
     graph=Graph(bolt=True, host=graphHost, user=graphUser, password=graphPassphrase)
     years=["2017","2018"]# provide season/years
 
@@ -214,8 +216,6 @@ def neo4jGraphFormation():
     return graph
 
 def createNeoGraph():
-    graph=neo4jGraphFormation()
-    #create relation between the 2 seasons
-    graph.run("MATCH(p:Season {name:'Year2017'}), (g:Season {name:'Year2018'}) MERGE (p)-[s:NEXT]->(g)")    
+    neo4jGraphFormation()
 
 createNeoGraph()
