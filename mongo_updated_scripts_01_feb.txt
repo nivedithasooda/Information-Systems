@@ -120,13 +120,13 @@ db.playerStats.insertOne({Name:"Mohamed Salah",Team:"Liverpool",Height:"190cm",P
 
 db.createCollection("clubStats")
 
-db.clubStats.insertOne({ name:"Manchester United", manager:"Ole Gunnar Solskjaer" , Budget: "50000" ,TitlesWon : [{year:"2017",TrophyName:"EPL"} ,{year:"2018",TrophyName:"UEFA"}] , SeasonPoints : [{ Year: "2017" , Points: "20"}, { Year: "2018" , Points: "21"}] , AnnualRevenue :[{Year: "2017" , Revenue: "70000"},{Year: "2018" , Revenue: "70000"}]})
+db.clubStats.insertOne({ name:"Manchester United", manager:"Ole Gunnar Solskjaer" , Budget: "50000" ,TitlesWon : [{year:"2017",TrophyName:"EPL"} ,{year:"2018",TrophyName:"UEFA"}] , SeasonPoints : [{ Year: "2017" , Points: "20"}, { Year: "2018" , Points: "21"}] , AnnualRevenue :[{Year: "2017" , Revenue: "80000"},{Year: "2018" , Revenue: "670000"}]})
 
-db.clubStats.insertOne({ name:"Arsenal", manager:"Unai Emery" ,Budget: "70000" ,TitlesWon : [{year:"2017",TrophyName:"UEFA"}], SeasonPoints : [{ Year: "2017" , Points: "20"}, { Year: "2018" , Points: "21"}] , AnnualRevenue :[{Year: "2017" , Revenue: "60000"},{Year: "2018" , Revenue: "67000"}]})
+db.clubStats.insertOne({ name:"Arsenal", manager:"Unai Emery" ,Budget: "70000" ,TitlesWon : [{year:"2017",TrophyName:"UEFA"}], SeasonPoints : [{ Year: "2017" , Points: "20"}, { Year: "2018" , Points: "21"}] , AnnualRevenue :[{Year: "2017" , Revenue: "62000"},{Year: "2018" , Revenue: "65000"}]})
 
-db.clubStats.insertOne({ name:"Chelsea", manager:"Maurizio Sarri" ,Budget: "80000" ,TitlesWon : [{year:"2018",TrophyName:"EPL"}], SeasonPoints : [{ Year: "2017" , Points: "20"}, { Year: "2018" , Points: "21"}] , AnnualRevenue :[{Year: "2017" , Revenue: "50000"},{Year: "2018" , Revenue: "50000"}]})
+db.clubStats.insertOne({ name:"Chelsea", manager:"Maurizio Sarri" ,Budget: "80000" ,TitlesWon : [{year:"2018",TrophyName:"EPL"}], SeasonPoints : [{ Year: "2017" , Points: "20"}, { Year: "2018" , Points: "21"}] , AnnualRevenue :[{Year: "2017" , Revenue: "51000"},{Year: "2018" , Revenue: "52000"}]})
 
-db.clubStats.insertOne({ name:"Liverpool", manager:"Jurgen Klopp" ,Budget: "90000" ,TitlesWon : [{year:"2018",TrophyName:"FPL"}], SeasonPoints : [{ Year: "2017" , Points: "20"}, { Year: "2018" , Points: "21"}] , AnnualRevenue :[{Year: "2017" , Revenue: "50000"},{Year: "2018" , Revenue: "50000"}]})
+db.clubStats.insertOne({ name:"Liverpool", manager:"Jurgen Klopp" ,Budget: "90000" ,TitlesWon : [{year:"2018",TrophyName:"FPL"}], SeasonPoints : [{ Year: "2017" , Points: "20"}, { Year: "2018" , Points: "21"}] , AnnualRevenue :[{Year: "2017" , Revenue: "89000"},{Year: "2018" , Revenue: "80000"}]})
 
 
 
