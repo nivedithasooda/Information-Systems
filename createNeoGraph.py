@@ -2,7 +2,9 @@ from py2neo import Graph, Node, Relationship
 
 #CREATE SEASON
 def createSeasons(label,season,graph):#season
+        previous=int(season)-1
         graph.run("CREATE (n:"+label+" {name:'Year"+season+"',goals:0})")
+        graph.run("OPTIONAL MATCH (node:Season {name:'Year"+str(previous)+"'}) WITH node MATCH (node),(m:Season {name:'Year"+season+"'}) merge (node)-[r:NEXT]->(m) RETURN (node)")
 
 #CREATE CLUB(AFTER CREATING SEASON)
 def createClubNodeAndrelations(label,club,year,season,graph):#club
@@ -23,17 +25,19 @@ def createPlayerNodeAndrelations(label,player,club,games,year,graph):#players
     for game in games:
         graph.run("MATCH(p:"+label+" {name:'"+player+"', year:'"+year+"'}), (g:Game {name:'"+game+"',year:'"+year+"'}) MERGE (p)-[s:PLAYS]->(g)")
         graph.run("MATCH(p:"+label+" {name:'"+player+"', year:'"+year+"'})-[r:PLAYS]-(g:Game {name:'"+game+"',year:'"+year+"'}) SET r.goals = 0, r.assists = 0, r.yellowCards = 0, r.redCards = 0, r.passes = 0, r.tackles = 0, r.goalsSaved = 0, r.inTime = 0, r.outTime = 0, r.fouls = 0, r.dribbles = 0,r.shots=0,r.chances=0")
-        
+       
 def neo4jGraphFormation():
     graphHost='localhost'
     graphUser = "neo4j"
-    graphPassphrase = "chinmay007"
+    graphPassphrase = "check"
     graph=Graph(bolt=True, host=graphHost, user=graphUser, password=graphPassphrase)
-    years=["2017","2018"]# provide season/years
+    graph.run("CREATE (n:Season {name:'Year2017',goals:0})")
 
+    years=["2017","2018"]# provide season/years
     #create seasons and club relationships
     for year in years:
-        createSeasons("Season",year,graph)
+        if(year!="2017"):
+            createSeasons("Season",year,graph)
         season="Year"+year
         clubs=["Manchester United","Chelsea","Arsenal","Liverpool"]# provide club names
         for club in clubs:
@@ -214,8 +218,6 @@ def neo4jGraphFormation():
     return graph
 
 def createNeoGraph():
-    graph=neo4jGraphFormation()
-    #create relation between the 2 seasons
-    graph.run("MATCH(p:Season {name:'Year2017'}), (g:Season {name:'Year2018'}) MERGE (p)-[s:NEXT]->(g)")    
+    neo4jGraphFormation()
 
-createNeoGraph()
+createNeoGraph()  
