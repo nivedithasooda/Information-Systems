@@ -8,6 +8,8 @@ graph=Graph(bolt=True, host=graphHost, user=graphUser, password=graphPassphrase)
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["FootballDBMongo"]
 mycol = mydb["playerStats"]
+mycol1 = mydb["clubStats"]
+import subprocess
 
 
 
@@ -72,7 +74,7 @@ def findWinnerAndCalcPerf(home_team,home_players,away_team,away_players,year):
         player_score = 0
         for g in graph.run("MATCH (p:Player {name:'"+p+"',year:'"+year+"'})-[q:PLAYS]-(g:Game {name:'"+sys.argv[1].split("_")[0]+" v/s "+sys.argv[1].split("_")[1]+"',year:'"+year+"'}) return q.goals as goals, q.assists as assists, q.chances as chances, q.tackles as tackles, q.passes as passes, q.goalsSaved as goalsSaved, q.yellowCards as ycards, q.redCards as rcards, q.inTime as itime, q.outTime as otime"):
             away_sum = away_sum + g["goals"]
-            player_score = (1 * g["goals"]) + (0.75 * g["assists"]) + (0.65 * g["chances"]) + (0.5 * g["tackles"]) + (0.25 * g["passes"]) + (0.75 * g["goalsSaved"])
+            player_score = (1 * g["goals"]) + (0.75 * g["assists"]) + (0.65 * g["chances"]) + (0.5 * g["tackles"]) + (0.25 * g["passes"]) + (0.5 * g["goalsSaved"])
             perf_away[p] = player_score
             for x in mycol.find({"Name":p},{"Name":1,"Goals":1,"Saves":1,"Assists":1,"Saves":1,"YellowCards":1,"RedCards":1,"ManOfTheMatch":1,"Tackles":1,"Performance":1,"MinutesPlayed":1,"_id":0}):
                 if(x["Performance"] == "0"):
@@ -90,7 +92,7 @@ def findWinnerAndCalcPerf(home_team,home_players,away_team,away_players,year):
     
                     if(min["year"] == year):
 
-                        min["Minutes"] = int(min["Minutes"]) + (int(g["otime"]) - int(g["itime"]))
+                        min["Minutes"] = int(min["Minutes"]) + ((int(g["otime"]) - int(g["itime"])))
                             
                 mycol.find_one_and_update({"Name":p},{"$set":{"MinutesPlayed":x["MinutesPlayed"]}})
 
@@ -107,14 +109,51 @@ def findWinnerAndCalcPerf(home_team,home_players,away_team,away_players,year):
     winner = ''
     if(home_sum > away_sum):
         winner = home_team
-        graph.run("MATCH(c:Club {name:'"+home_team+"'})-[b:PARTICIPATED_IN]-(s:Season {name:'Year"+year+"'}) set c.pointsWon = c.pointsWon + 3")
+        print("Winner is home")
+        graph.run("MATCH(c:Club {name:'"+home_team+"',year:'"+year+"'})-[b:PARTICIPATED_IN]-(s:Season {name:'Year"+year+"'}) set c.pointsWon = c.pointsWon + 3")
+        for x in mycol1.find({"name":home_team},{"SeasonPoints":1}):
+            points = x["SeasonPoints"]
+            for p in points:
+                if(p["Year"] == year):
+                    p["Points"] = int(p["Points"]) + 3
+            mycol1.find_one_and_update({"name":home_team},{"$set":{"SeasonPoints":points}})
+
+
+
+
     elif(home_sum == away_sum):
         winner = "DRAW"
-        graph.run("MATCH(c:Club {name:'"+home_team+"'})-[b:PARTICIPATED_IN]-(s:Season {name:'Year"+year+"'}) set c.pointsWon = c.pointsWon + 1")
-        graph.run("MATCH(c:Club {name:'"+away_team+"'})-[b:PARTICIPATED_IN]-(s:Season {name:'Year"+year+"'}) set c.pointsWon = c.pointsWon + 1")
+        graph.run("MATCH(c:Club {name:'"+home_team+"',year:'"+year+"'})-[b:PARTICIPATED_IN]-(s:Season {name:'Year"+year+"'}) set c.pointsWon = c.pointsWon + 1")
+        for x in mycol1.find({"name":home_team},{"SeasonPoints":1}):
+            points = x["SeasonPoints"]
+            for p in points:
+                if(p["Year"] == year):
+                    p["Points"] = int(p["Points"]) + 1
+            mycol1.find_one_and_update({"name":home_team},{"$set":{"SeasonPoints":points}})
+        
+        graph.run("MATCH(c:Club {name:'"+away_team+"',year:'"+year+"'})-[b:PARTICIPATED_IN]-(s:Season {name:'Year"+year+"'}) set c.pointsWon = c.pointsWon + 1")
+        for x in mycol1.find({"name":away_team},{"SeasonPoints":1}):
+            points = x["SeasonPoints"]
+            for p in points:
+                if(p["Year"] == year):
+                    p["Points"] = int(p["Points"]) + 1
+            mycol1.find_one_and_update({"name":away_team},{"$set":{"SeasonPoints":points}})
+
     else:
         winner = away_team
-        graph.run("MATCH(c:Club {name:'"+away_team+"'})-[b:PARTICIPATED_IN]-(s:Season {name:'Year"+year+"'}) set c.pointsWon = c.pointsWon + 3")
+        print(home_team)
+        print(away_team)
+        print(home_sum,away_sum)
+        print("Winner is away")
+        graph.run("MATCH(c:Club {name:'"+away_team+"',year:'"+year+"'})-[b:PARTICIPATED_IN]-(s:Season {name:'Year"+year+"'}) set c.pointsWon = c.pointsWon + 3")
+        for x in mycol1.find({"name":away_team},{"SeasonPoints":1}):
+            points = x["SeasonPoints"]
+            for p in points:
+                if(p["Year"] == year):
+                    p["Points"] = int(p["Points"]) + 3
+            mycol1.find_one_and_update({"name":away_team},{"$set":{"SeasonPoints":points}})
+        
+        
     graph.run("MATCH (g:Game {name:'"+sys.argv[1].split("_")[0]+" v/s "+sys.argv[1].split("_")[1]+"',year:'"+year+"'}) SET g.result = '"+str(home_sum)+"  -  "+str(away_sum)+"', g.winner = '"+winner+"'")
     return perf_home,perf_away
 
@@ -156,7 +195,4 @@ for x in mycol.find({"Name":manOfTheMatch[0]},{"ManOfTheMatch":1}):
     x["ManOfTheMatch"] = int(x["ManOfTheMatch"]) + 1
     mycol.find_one_and_update({"Name":manOfTheMatch[0]},{"$set":{"ManOfTheMatch":x["ManOfTheMatch"]}})
 
-
-
-
-
+subprocess.run(["python","checkLeagueWinner.py",year])

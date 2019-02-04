@@ -110,7 +110,7 @@ def checkMilestone(key,value,graph,home_team,away_team,year):
     totalGoals = totalGoals + 1
     for g in graph.run("MATCH (p:Player {name:'"+value.split("_")[0]+"',year:'"+year+"'})-[q:PLAYS]-(r:Game {name:'"+home_team+" v/s "+away_team+"',year:'"+year+"'}), (p:Player {name:'"+value.split("_")[0]+"',year:'"+year+"'})-[b:BELONGS_TO]-(c:Club {year:'"+year+"'}), (r:Game)-[x:GAME_PLAYED]-(s:Season) set s.goals = s.goals + 1 return c.name as name"):
 
-        if(totalGoals % 2 == 0):
+        if(totalGoals % 10 == 0):
             againstTeam = ''
             print("Goal scored by {}".format(value.split("_")[0]))
 
@@ -123,8 +123,8 @@ def checkMilestone(key,value,graph,home_team,away_team,year):
                 print("Against {}".format(home_team))
             print("At time {}".format(key))
             print("This is goal number {}".format(totalGoals))
-            print("Milestone number {}".format(totalGoals // 2))
-            mycol.insert_one({str(totalGoals//2):{"Goal Number":totalGoals,"Scored By":value.split("_")[0],"Playing for":g["name"],"Against":againstTeam,"Minutes":key}})
+            print("Milestone number {}".format(totalGoals // 10))
+            mycol.insert_one({str(totalGoals//10):{"Goal Number":totalGoals,"Scored By":value.split("_")[0],"Playing for":g["name"],"Against":againstTeam,"Minutes":key}})
 
 
 
@@ -325,9 +325,9 @@ def neo4j(x,game,events,home_events,away_events):
         print("Game continue")
     return events,home_events,away_events
 
-game("Arsenal_Manchester United_2018")
+game('Chelsea_Manchester United_2018')
 print("Now executing next script")
-subprocess.run(["python","match_stats.py","Arsenal_Manchester United_2018"])
+subprocess.run(["python","match_stats.py","Chelsea_Manchester United_2018"])
 
 
 
