@@ -25,17 +25,19 @@ def createPlayerNodeAndrelations(label,player,club,games,year,graph):#players
     for game in games:
         graph.run("MATCH(p:"+label+" {name:'"+player+"', year:'"+year+"'}), (g:Game {name:'"+game+"',year:'"+year+"'}) MERGE (p)-[s:PLAYS]->(g)")
         graph.run("MATCH(p:"+label+" {name:'"+player+"', year:'"+year+"'})-[r:PLAYS]-(g:Game {name:'"+game+"',year:'"+year+"'}) SET r.goals = 0, r.assists = 0, r.yellowCards = 0, r.redCards = 0, r.passes = 0, r.tackles = 0, r.goalsSaved = 0, r.inTime = 0, r.outTime = 0, r.fouls = 0, r.dribbles = 0,r.shots=0,r.chances=0")
-        
+       
 def neo4jGraphFormation():
     graphHost='localhost'
     graphUser = "neo4j"
-    graphPassphrase = "test"
+    graphPassphrase = "check"
     graph=Graph(bolt=True, host=graphHost, user=graphUser, password=graphPassphrase)
-    years=["2017","2018"]# provide season/years
+    graph.run("CREATE (n:Season {name:'Year2017',goals:0})")
 
+    years=["2017","2018"]# provide season/years
     #create seasons and club relationships
     for year in years:
-        createSeasons("Season",year,graph)
+        if(year!="2017"):
+            createSeasons("Season",year,graph)
         season="Year"+year
         clubs=["Manchester United","Chelsea","Arsenal","Liverpool"]# provide club names
         for club in clubs:
@@ -218,4 +220,4 @@ def neo4jGraphFormation():
 def createNeoGraph():
     neo4jGraphFormation()
 
-createNeoGraph()
+createNeoGraph()  
