@@ -14,22 +14,25 @@ queryString_partTwo = {"Budget": 1, "_id": 0}
 
 x = mydb.clubStats.find(queryString_partOne, queryString_partTwo)
 
+has_val = True if mydb.clubStats.count_documents({"name": userInputTeam}) > 0 else False
 
-for firstValue in x:
+if has_val:
 
-    for a in firstValue:
+    for firstValue in x:
 
-        queryString_partThree = {
-            "$and": [{"Position": "Attacker"}, {"BasePrice": {"$lt": firstValue[a]}}, {"Team": {"$ne": userInputTeam}}]}
+        for a in firstValue:
 
-        queryString_partFour = {"Name": 1, "_id": 0, "BasePrice": 1, "Team": 1}
+            queryString_partThree = {
+                "$and": [{"Position": "Attacker"}, {"BasePrice": {"$lt": firstValue[a]}}, {"Team": {"$ne": userInputTeam}}]}
 
-    y = mydb.playerStats.find(queryString_partThree, queryString_partFour)
-    sortedList = y.sort("BasePrice", pymongo.DESCENDING)
-    listOfDocuments = sortedList.limit(5)
+            queryString_partFour = {"Name": 1, "_id": 0, "BasePrice": 1, "Team": 1}
 
-    print("---LIST OF SUITABLE ATTACKERS IN YOUR PRICE RANGE---")
-    for eachDocument in sortedList:
-        print(eachDocument)
+        y = mydb.playerStats.find(queryString_partThree, queryString_partFour)
+        sortedList = y.sort("BasePrice", pymongo.DESCENDING)
+        listOfDocuments = sortedList.limit(5)
+        print("---LIST OF SUITABLE ATTACKERS IN YOUR PRICE RANGE---")
+        for eachDocument in sortedList:
+            print(eachDocument)
 
-
+else:
+    print("No records found")
