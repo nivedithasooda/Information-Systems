@@ -14,15 +14,17 @@ queryString_partTwo = {"BasePrice": 1, "_id": 0, "Contract": 1}
 
 allData = mydb.playerStats.find(queryString_partOne, queryString_partTwo)
 year = datetime.datetime.now().year-1
-#have_list = True if len(list(allData)) else False
 
-for oneRecord in allData:
-        print("-- The current price of the player is :" + oneRecord["BasePrice"])
+has_val = True if mydb.playerStats.count_documents({"Name": userInputTeam}) > 0 else False
 
-        for contract in oneRecord["Contract"]:
-            if contract["Year"] == str(year):
-                print("-- The current price of the player is : " + oneRecord["BasePrice"])
-                print("-- Salary of the player is : " + contract["Salary"])
-                print("-- Previous clubs are as below")
-            print(contract["Team"])
+if has_val:
 
+    for oneRecord in allData:
+            print("-- The current price of the player is :" + oneRecord["BasePrice"])
+            for contract in oneRecord["Contract"]:
+                if contract["Year"] == str(year):
+                    print("-- Salary of the player is : " + contract["Salary"])
+                    print("-- Previous clubs are as below")
+                print(contract["Team"])
+else:
+    print("No data found")
