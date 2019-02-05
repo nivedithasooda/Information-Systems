@@ -1,6 +1,4 @@
 from py2neo import Graph, Node, Relationship
-import datetime
-import timedelta
 
 def neo4j():
     graphHost='localhost'
@@ -9,32 +7,40 @@ def neo4j():
     graph=Graph(bolt=True, host=graphHost, user=graphUser, password=graphPassphrase)
     return graph
 
-def getMatchScheduleBasedOnDate():
-    graph=neo4j()
-    print("Find the match schedule in a season:")
-    date=input("Enter the date(dd-mm-yyyy):")
-    format_str = "%d-%m-%Y" # The format
-    try:
-        fromDate = datetime.datetime.strptime(date, format_str)
-        fromDateStr=datetime.datetime.strftime(fromDate,format_str)
-        toDate=fromDate + datetime.timedelta(days=120)
-        toDateStr=datetime.datetime.strftime(toDate,format_str)
-        year=datetime.datetime.now().year-1
-        allSeasons=graph.run("match(n:Game {year:'"+str(year)+"'}) where n.schedule > '"+fromDateStr+"'and n.schedule < '"+toDateStr+"' return n.schedule,n.name")
-        for game in allSeasons:
-                print(game["n.name"]+" to take place on "+game["n.schedule"])
-    except:
-        print("Invalid date format")
-
-           
-def getMatchSchedule():
-    graph=neo4j()
-    print("Find the match schedule in a season:")
-    club=input("Enter the club name:")
-    year=datetime.datetime.now().year-1
-    allSeasons=graph.run("match(n:Game {year:'"+str(year)+"'})<-[r:GAME_PLAYED]-(s:Season {name:'Year"+str(year)+"'})  where n.name contains '"+club+"' return n.schedule,n.name")
-    for game in allSeasons:
-        print(game["n.name"]+" to take place in "+game["n.schedule"])
+def findUnbeatenPerformanceInASeason(club,year,graph):
+#find games with the club name
+    allGames=graph.run("match(n:Game {year:'"+(year)+"'})<--(s:Season {name:'Year"+year+"'}) where n.name contains '"+club+"' return n.name,n.winner")
+    listOfGames=[]
+    for game in allGames:
+        if(game["n.winner"]!=club and game["n.winner"]!=""):
+            listOfGames=[]
+            break
+        listOfGames.append(game["n.name"])
         
-#getMatchScheduleBasedOnDate()
-getMatchSchedule()
+    gamesCount=len(listOfGames) 
+
+    if(gamesCount > 0):
+            #print year and game
+            print("\nSeason with unbeaten performance: Year"+year)
+            print("Matches played:")
+            for game in listOfGames:
+                print(game)
+    return gamesCount
+
+def findUnbeatenPerformanceOfAClub():
+    graph=neo4j()
+    #find all the seasons club has played for or give a year
+    print("Find unbeaten side of a Club in a season:")
+    club=input("\nEnter the club:")
+    allSeasons=graph.run("match(n:Club {name:'"+club+"'})-[r:PARTICIPATED_IN]->(s:Season)  return s.name")
+    if(allSeasons.forward()):
+        for season in allSeasons:
+                year=season["s.name"]
+                year =year.replace('Year','')
+                gamesCount=findUnbeatenPerformanceInASeason(club,year,graph)
+                if(gamesCount <= 0):
+                    print("\nThe season "+season["s.name"]+" did not have unbeaten performance by the club\n")                
+    else:
+        print("Enter a valid club!") 
+    
+findUnbeatenPerformanceOfAClub()
