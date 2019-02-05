@@ -29,7 +29,7 @@ def createPlayerNodeAndrelations(label,player,club,games,year,graph):#players
 def neo4jGraphFormation():
     graphHost='localhost'
     graphUser = "neo4j"
-    graphPassphrase = "chinmay007"
+    graphPassphrase = "test"
     graph=Graph(bolt=True, host=graphHost, user=graphUser, password=graphPassphrase)
     graph.run("CREATE (n:Season {name:'Year2017',goals:0})")
 
