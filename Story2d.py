@@ -5,7 +5,7 @@ graphUser = "neo4j"
 graphPassphrase = "test"
 graph = Graph(bolt=True, host=graphHost, user=graphUser, password=graphPassphrase)
 
-print("Lets find the biggest win of the season")
+print("--Lets find the biggest win of the season--")
 year = input("Enter the year : ")
 team = input("Enter the team : ")
 
