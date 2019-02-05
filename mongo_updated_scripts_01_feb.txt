@@ -142,9 +142,9 @@ db.clubStats.insertOne({ name:"Manchester United", manager:"Ole Gunnar Solskjaer
 
 db.clubStats.insertOne({ name:"Arsenal", manager:"Unai Emery" ,Budget: "70000" ,TitlesWon : [{year:"2017",TrophyName:""}], SeasonPoints : [{ Year: "2017" , Points: "0"}, { Year: "2018" , Points: "0"}] , AnnualRevenue :[{Year: "2017" , Revenue: "62000"},{Year: "2018" , Revenue: "65000"}]})
 
-db.clubStats.insertOne({ name:"Chelsea", manager:"Maurizio Sarri" ,Budget: "80000" ,TitlesWon : [{year:"2018",TrophyName:""}], SeasonPoints : [{ Year: "2017" , Points: ""}, { Year: "2018" , Points: ""}] , AnnualRevenue :[{Year: "2017" , Revenue: "51000"},{Year: "2018" , Revenue: "52000"}]})
+db.clubStats.insertOne({ name:"Chelsea", manager:"Maurizio Sarri" ,Budget: "80000" ,TitlesWon : [{year:"2018",TrophyName:""}], SeasonPoints : [{ Year: "2017" , Points: "0"}, { Year: "2018" , Points: "0"}] , AnnualRevenue :[{Year: "2017" , Revenue: "51000"},{Year: "2018" , Revenue: "52000"}]})
 
-db.clubStats.insertOne({ name:"Liverpool", manager:"Jurgen Klopp" ,Budget: "90000" ,TitlesWon : [{year:"2018",TrophyName:""}], SeasonPoints : [{ Year: "2017" , Points: ""}, { Year: "2018" , Points: ""}] , AnnualRevenue :[{Year: "2017" , Revenue: "89000"},{Year: "2018" , Revenue: "80000"}]})
+db.clubStats.insertOne({ name:"Liverpool", manager:"Jurgen Klopp" ,Budget: "90000" ,TitlesWon : [{year:"2018",TrophyName:""}], SeasonPoints : [{ Year: "2017" , Points: "0"}, { Year: "2018" , Points: "0"}] , AnnualRevenue :[{Year: "2017" , Revenue: "89000"},{Year: "2018" , Revenue: "80000"}]})
 
 
 
