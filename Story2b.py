@@ -30,17 +30,14 @@ def findUnbeatenPerformanceInASeason(club,year,graph):
 def findUnbeatenPerformanceOfAClub():
     graph=neo4j()
     #find all the seasons club has played for or give a year
-    print("Find unbeaten side of a Club in a season:")
+    print("Find unbeaten side of a club in a season:")
     club=input("\nEnter the club:")
     allSeasons=graph.run("match(n:Club {name:'"+club+"'})-[r:PARTICIPATED_IN]->(s:Season)  return s.name")
-    if(allSeasons.forward()):
-        for season in allSeasons:
+    for season in allSeasons:
                 year=season["s.name"]
                 year =year.replace('Year','')
                 gamesCount=findUnbeatenPerformanceInASeason(club,year,graph)
                 if(gamesCount <= 0):
                     print("\nThe season "+season["s.name"]+" did not have unbeaten performance by the club\n")                
-    else:
-        print("Enter a valid club!") 
     
 findUnbeatenPerformanceOfAClub()
