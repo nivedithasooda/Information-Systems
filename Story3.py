@@ -5,7 +5,7 @@ myClient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myClient["FootballDBMongo"]
 
 
-print("This query will give the top 2 managers based on your team budget and manager's current salary")
+print("This query will give the top 2 managers based on your team budget and player base price ")
 userInputTeam = input("Enter the team name : ")
 
 clubWhereClause = {
@@ -34,6 +34,6 @@ else:
                 clubName=points["name"]
                 for point in points["SeasonPoints"]:
                         if(point["Year"]==str(year)):
-                            listManagers[managerName+", managed team "+clubName+" in "+str(year)]=point["Points"]
+                            listManagers[managerName+", managed team "+clubName+" in "+str(year)]=str(point["Points"])
         for key,value in sorted(listManagers.items(),key=lambda kv:kv[1],reverse=True):
             print("\n"+key+".\nTotal points scored by the team in the season:"+value)
