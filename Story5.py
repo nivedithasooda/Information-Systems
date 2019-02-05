@@ -11,7 +11,7 @@ def neo4j():
 
 def getMatchScheduleBasedOnDate():
     graph=neo4j()
-    print("Find the match schedule in a season:")
+    print("Find the match schedules in a season from a date:")
     date=input("Enter the date(yyyy-mm-dd):")
     format_str = "%Y-%m-%d" # The format
     try:
