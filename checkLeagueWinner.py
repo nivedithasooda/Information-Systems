@@ -3,7 +3,7 @@ from py2neo import Graph, Node, Relationship
 import pymongo
 graphHost='localhost'
 graphUser = "neo4j"
-graphPassphrase = "chinmay007"
+graphPassphrase = "test"
 graph=Graph(bolt=True, host=graphHost, user=graphUser, password=graphPassphrase)
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["FootballDBMongo"]

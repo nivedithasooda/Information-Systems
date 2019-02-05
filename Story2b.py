@@ -3,7 +3,7 @@ from py2neo import Graph, Node, Relationship
 def neo4j():
     graphHost='localhost'
     graphUser = "neo4j"
-    graphPassphrase = "chinmay007"
+    graphPassphrase = "test"
     graph=Graph(bolt=True, host=graphHost, user=graphUser, password=graphPassphrase)
     return graph
 

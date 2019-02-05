@@ -3,7 +3,7 @@ from py2neo import Graph, Node, Relationship
 import pymongo
 graphHost='localhost'
 graphUser = "neo4j"
-graphPassphrase = "chinmay007"
+graphPassphrase = "test"
 graph=Graph(bolt=True, host=graphHost, user=graphUser, password=graphPassphrase)
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["FootballDBMongo"]
@@ -154,7 +154,7 @@ def findWinnerAndCalcPerf(home_team,home_players,away_team,away_players,year):
             mycol1.find_one_and_update({"name":away_team},{"$set":{"SeasonPoints":points}})
         
         
-    graph.run("MATCH (g:Game {name:'"+sys.argv[1].split("_")[0]+" v/s "+sys.argv[1].split("_")[1]+"',year:'"+year+"'}) SET g.result = '"+str(home_sum)+"  -  "+str(away_sum)+"', g.winner = '"+winner+"'")
+    graph.run("MATCH (g:Game {name:'"+sys.argv[1].split("_")[0]+" v/s "+sys.argv[1].split("_")[1]+"',year:'"+year+"'}) SET g.result = '"+str(home_sum)+"-"+str(away_sum)+"', g.winner = '"+winner+"'")
     return perf_home,perf_away
 
 def calcManOfTheMatch(home,away):

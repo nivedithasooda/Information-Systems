@@ -14,7 +14,7 @@ numOfMidfielder = input("How many midfielders do you need?")
 if numOfDefenders != 0:
 
     queryString_partOne = {
-        "$and": [{"Position": "Defender"}, {"Performance": {"$gt": "1"}}, {"Team": userInputTeam}, {"Fit": "True"}]}
+        "$and": [{"Position": "Defender"}, {"Performance": {"$gt": "0"}}, {"Team": userInputTeam}, {"Fit": "True"}]}
     queryString_partTwo = {"Name": 1, "_id": 0, "Performance": 1, "Position": 1}
     queryString_partThree = "{" " Performance" ":-1}"
     if(mydb.playerStats.count_documents(queryString_partOne) == 0):

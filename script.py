@@ -7,7 +7,7 @@ rd = redis.Redis("localhost")
 from py2neo import Graph, Node, Relationship
 graphHost='localhost'
 graphUser = "neo4j"
-graphPassphrase = "chinmay007"
+graphPassphrase = "test"
 graph=Graph(bolt=True, host=graphHost, user=graphUser, password=graphPassphrase)
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["FootballDBMongo"]
@@ -325,9 +325,9 @@ def neo4j(x,game,events,home_events,away_events):
         print("Game continue")
     return events,home_events,away_events
 
-game('Manchester United_Arsenal_2018')
+game('Chelsea_Manchester United_2017')
 print("Now executing next script")
-subprocess.run(["python","match_stats.py","Manchester United_Arsenal_2018"])
+subprocess.run(["python","match_stats.py","Chelsea_Manchester United_2017"])
 
 
 
