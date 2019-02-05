@@ -15,7 +15,7 @@ def createClubNodeAndrelations(label,club,year,season,graph):#club
 #CREATE GAME(AFTER CREATING CLUBS)
 def createGameNodeAndrelations(label,game,year,club,opponent,schedule,season,graph):#game
     locations={"Arsenal":"Emirates Stadium","Liverpool":"Anfield","Chelsea":"Stamford Bridge","Manchester_United":"Old Trafford"}
-    graph.run("CREATE (n:"+label+" {name:'"+game+"',year:'"+year+"', result: '', winner: '',manOfTheMatch:'',location:'"+locations[club]+"',schedule:'"+schedule+"', "+club+"_fouls: 0, "+club+"_offsides: 0, "+club+"_corners: 0, "+club+"_totalShots: 0, "+club+"_yellowCards: 0, "+club+"_redCards: 0, "+club+"_possession: 0, "+opponent+"_fouls: 0, "+opponent+"_offsides: 0, "+opponent+"_corners: 0, "+opponent+"_totalShots: 0, "+opponent+"_yellowCards: 0, "+opponent+"_redCards: 0, "+opponent+"_possession: 0})")
+    graph.run("CREATE (n:"+label+" {name:'"+game+"',year:'"+year+"', result: '', winner: '',manOfTheMatch:'',location:'"+locations[club]+"',schedule: date('"+schedule+"'), "+club+"_fouls: 0, "+club+"_offsides: 0, "+club+"_corners: 0, "+club+"_totalShots: 0, "+club+"_yellowCards: 0, "+club+"_redCards: 0, "+club+"_possession: 0, "+opponent+"_fouls: 0, "+opponent+"_offsides: 0, "+opponent+"_corners: 0, "+opponent+"_totalShots: 0, "+opponent+"_yellowCards: 0, "+opponent+"_redCards: 0, "+opponent+"_possession: 0})")
     graph.run("MATCH(p:"+label+" {name:'"+game+"',year:'"+year+"'}), (g:Season {name:'"+season+"'}) MERGE (p)<-[s:GAME_PLAYED]-(g)")
     
 #CREATE PLAYER AND GAME RELATION(AFTER CREATING GAMES)
@@ -49,20 +49,20 @@ def neo4jGraphFormation():
         for club in clubs:
             clubName=club.replace(' ','_')
             if((year == "2018" and club=="Arsenal") or (year=="2017" and club=="Liverpool")):
-                createGameNodeAndrelations("Game",club+" v/s Manchester United",year,club,"Manchester_United","05-02-"+year,season,graph)
-                createGameNodeAndrelations("Game",club+" v/s Chelsea",year,club,"Chelsea","05-04-"+year,season,graph)
+                createGameNodeAndrelations("Game",club+" v/s Manchester United",year,club,"Manchester_United",year+"-02-05",season,graph)
+                createGameNodeAndrelations("Game",club+" v/s Chelsea",year,club,"Chelsea",year+"-04-06",season,graph)
             elif(club=="Chelsea"):
-                createGameNodeAndrelations("Game",club+" v/s Manchester United",year,club,"Manchester_United","05-06-"+year,season,graph)                
+                createGameNodeAndrelations("Game",club+" v/s Manchester United",year,club,"Manchester_United",year+"-06-05",season,graph)                
                 if(year == "2017"):
-                    createGameNodeAndrelations("Game",club+" v/s Liverpool",year,club,"Liverpool","05-08-"+year,season,graph)
+                    createGameNodeAndrelations("Game",club+" v/s Liverpool",year,club,"Liverpool",year+"-08-05",season,graph)
                 elif(year=="2018"):
-                    createGameNodeAndrelations("Game",club+" v/s Arsenal",year,club,"Arsenal","05-08-"+year,season,graph)
+                    createGameNodeAndrelations("Game",club+" v/s Arsenal",year,club,"Arsenal",year+"-08-05",season,graph)
             elif(club=="Manchester United"):
-                createGameNodeAndrelations("Game",club+" v/s Chelsea",year,clubName,"Chelsea","05-10-"+year,season,graph)
+                createGameNodeAndrelations("Game",club+" v/s Chelsea",year,clubName,"Chelsea",year+"-10-05",season,graph)
                 if(year == "2017"):
-                    createGameNodeAndrelations("Game",club+" v/s Liverpool",year,clubName,"Liverpool","05-12-"+year,season,graph)
+                    createGameNodeAndrelations("Game",club+" v/s Liverpool",year,clubName,"Liverpool",year+"-12-05",season,graph)
                 elif(year=="2018"):
-                    createGameNodeAndrelations("Game",club+" v/s Arsenal",year,clubName,"Arsenal","05-12-"+year,season,graph)
+                    createGameNodeAndrelations("Game",club+" v/s Arsenal",year,clubName,"Arsenal",year+"-12-05",season,graph)
 
         #after creation of games and relationships  
         # add all players for each season and mention matches they played for  
@@ -215,6 +215,7 @@ def neo4jGraphFormation():
                         #no game played by
                         createPlayerNodeAndrelations("Player","N Golo Kante",club,[],year,graph)  
                         createPlayerNodeAndrelations("Player","Willy Caballero",club,[],year,graph) 
+    print("Football Schema neo graph successfully created.")
     return graph
 
 def createNeoGraph():
