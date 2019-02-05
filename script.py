@@ -325,9 +325,9 @@ def neo4j(x,game,events,home_events,away_events):
         print("Game continue")
     return events,home_events,away_events
 
-game('Chelsea_Manchester United_2018')
+game('Manchester United_Arsenal_2018')
 print("Now executing next script")
-subprocess.run(["python","match_stats.py","Chelsea_Manchester United_2018"])
+subprocess.run(["python","match_stats.py","Manchester United_Arsenal_2018"])
 
 
 
