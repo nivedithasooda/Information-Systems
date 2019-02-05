@@ -5,7 +5,7 @@ myClient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myClient["FootballDBMongo"]
 
 
-print("This query will give the top 2 managers based on your team budget and player base price ")
+print("This query will give the top 2 managers based on your team budget and manager's current salary")
 userInputTeam = input("Enter the team name : ")
 
 clubWhereClause = {
