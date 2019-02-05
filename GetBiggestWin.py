@@ -1,17 +1,18 @@
-from py2neo import Graph
+from py2neo import Graph, Node, Relationship
 
 graphHost = 'localhost'
 graphUser = "neo4j"
-graphPassphrase = "test"
+graphPassphrase = "chinmay007"
 graph = Graph(bolt=True, host=graphHost, user=graphUser, password=graphPassphrase)
 
 print("Lets find the biggest win of the season")
 year = input("Enter the year : ")
 team = input("Enter the team : ")
 
-allGameResults = graph.run("MATCH (:Season { name: 'Year"+year+"' })-->(Game) WHERE Game.winner= '"+team+"' RETURN " "Game.result, Game.name ")
+#allGameResults = graph.run("MATCH (:Season { name: 'Year"+year+"' })-->(Game) WHERE Game.winner= '"+team+"' RETURN " "Game.result, Game.name ")
 #has_val = True if len(list(allGameResults)) else False
-
+for g in graph.run("MATCH (:Season { name: 'Year"+year+"' })-->(Game) WHERE Game.winner= '"+team+"' RETURN " "Game.result as result"):
+    print(g["result"][1],g["result"][5])
 if allGameResults.forward():
     list = []
     score = {}

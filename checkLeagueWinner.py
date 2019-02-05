@@ -53,7 +53,9 @@ if(flag == True):
         for t in title:
             if(t["year"] == year):
                 if(t["TrophyName"]!="EPL"):
-                    t["TrophyName"] = t["TrophyName"] + ', EPL'
+                    if(t["TrophyName"]==""):
+
+                        t["TrophyName"] = 'EPL'
         
         mycol.find_one_and_update({"name":maxPoints[0]},{"$set":{"TitlesWon":title}})
         print("The winner of the championship is {}".format(maxPoints[0]))

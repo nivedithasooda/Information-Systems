@@ -4,7 +4,7 @@ import datetime
 def neo4j():
     graphHost='localhost'
     graphUser = "neo4j"
-    graphPassphrase = "check"
+    graphPassphrase = "chinmay007"
     graph=Graph(bolt=True, host=graphHost, user=graphUser, password=graphPassphrase)
     return graph
 

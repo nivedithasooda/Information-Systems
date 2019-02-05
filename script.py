@@ -124,8 +124,8 @@ def checkMilestone(key,value,graph,home_team,away_team,year):
             print("At time {}".format(key))
             print("This is goal number {}".format(totalGoals))
             print("Milestone number {}".format(totalGoals // 10))
-            mycol.insert_one({str(totalGoals//10):{"Goal Number":totalGoals,"Scored By":value.split("_")[0],"Playing for":g["name"],"Against":againstTeam,"Minutes":key}})
-
+            #mycol.insert_one({str(totalGoals//10):{"Goal Number":totalGoals,"Scored By":value.split("_")[0],"Playing for":g["name"],"Against":againstTeam,"Minutes":key}})
+            mycol.insert_one({"Goal Number":totalGoals,"Scored By":value.split("_")[0],"Playing for":g["name"],"Against":againstTeam,"Minutes":key})
 
 
 
