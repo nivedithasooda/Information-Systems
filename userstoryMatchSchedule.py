@@ -21,8 +21,11 @@ def getMatchScheduleBasedOnDate():
         toDateStr=datetime.datetime.strftime(toDate,format_str)
         year=datetime.datetime.now().year-1
         allSeasons=graph.run("match(n:Game {year:'"+str(year)+"'}) where n.schedule > date('"+fromDateStr+"') and n.schedule < date('"+toDateStr+"') return toString(n.schedule) as timing,n.name,n.location")
-        for game in allSeasons:
-                print("Game "+game["n.name"]+" on "+game["timing"]+" at "+game["n.location"])
+        if(allSeasons.forward()):
+                for game in allSeasons:
+                        print("Game "+game["n.name"]+" on "+game["timing"]+" at "+game["n.location"])
+        else:
+                print("No upcoming matches in the duration!") 
     except:
         print("Invalid date format")
 
@@ -32,9 +35,9 @@ def getMatchSchedule():
     print("Find the match schedule in a season:")
     club=input("Enter the club name:")
     year=datetime.datetime.now().year-1
-    allSeasons=graph.run("match(n:Game {year:'"+str(year)+"'})<-[r:GAME_PLAYED]-(s:Season {name:'Year"+str(year)+"'})  where n.name contains '"+club+"' return n.schedule,n.name")
+    allSeasons=graph.run("match(n:Game {year:'"+str(year)+"'})<-[r:GAME_PLAYED]-(s:Season {name:'Year"+str(year)+"'})  where n.name contains '"+club+"' return toString(n.schedule) as schedule,n.name")
     for game in allSeasons:
-        print(game["n.name"]+" to take place in "+game["n.schedule"])
+        print(game["n.name"]+" to take place in "+game["schedule"])
         
 getMatchScheduleBasedOnDate()
 #getMatchSchedule()
