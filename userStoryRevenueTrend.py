@@ -10,19 +10,24 @@ def calcAnnualRevenueGrowth(revenue,year):
     yearRange = int(abs(year[0]-year[len(year)-1]))
 
     annualGrowth = (pow(end/start,1/yearRange) - 1) * 100
-    print("The annual revenue growth for the club is {}%".format(annualGrowth))
+    print("The revenue growth for the club between 2013 to 2018 is {:.2f}%".format(annualGrowth))
 
 
 
 club = input("Please enter the name of the club whose revenue trend you want to see ")
 year = []
 revenue = []
-clubData = mycol.find_one({"name":club})
-print(clubData["name"])
+try:
+
+    clubData = mycol.find_one({"name":club})
+except:
+    print("Unable to proceed")
+    
+#print(clubData["name"])
 for x in clubData:
     
     if(x == "AnnualRevenue"):
-        print("FOUND")
+        
         for y in clubData[x]:
             year.append(int(y["Year"]))
             revenue.append(int(y["Revenue"]))
