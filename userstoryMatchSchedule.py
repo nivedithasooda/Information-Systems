@@ -36,8 +36,11 @@ def getMatchSchedule():
     club=input("Enter the club name:")
     year=datetime.datetime.now().year-1
     allSeasons=graph.run("match(n:Game {year:'"+str(year)+"'})<-[r:GAME_PLAYED]-(s:Season {name:'Year"+str(year)+"'})  where n.name contains '"+club+"' return toString(n.schedule) as schedule,n.name")
-    for game in allSeasons:
-        print(game["n.name"]+" to take place in "+game["schedule"])
-        
+    if(allSeasons.forward()):
+        for game in allSeasons:
+                print(game["n.name"]+" to take place in "+game["schedule"])
+    else:
+        print("Enter a valid club!") 
+
 getMatchScheduleBasedOnDate()
 #getMatchSchedule()
