@@ -32,7 +32,7 @@ else:
         #Ponts earned in that season
         for w in databaseCollection[titles]:
             if(w["year"] in x ):
-                        seasonQuery1 = {"$and":[{"name": userInputClub},{"SeasonPoints.Points":{"$gt": "18"}}]}
+                        seasonQuery1 = {"$and":[{"name": userInputClub}]}
                         seasonQuery2 = {"SeasonPoints":1 ,"_id" :0}
                         databaseCollection1 = mydb.clubStats.find_one(seasonQuery1,seasonQuery2)
                         
