@@ -166,3 +166,23 @@ db.clubStats.update({"name" : "Arsenal"},{"$set":{"AnnualRevenue":[ { "Year" : "
 
 db.playerStats.update({"Name":"Alisson"},{"$set":{"Performance":"0"}})
 db.playerStats.update({"Name":"Simon Mignolet"},{"$set":{"Performance":"0"}})
+
+
+db.playerStats.update({"Name":"Petr Cech"},{"$set":{"Performance":"0.7"}})
+
+db.playerStats.update({"Name":"Shkodran Mustafi"},{"$set":{"Performance":"0.6"}})
+db.playerStats.update({"Name":"Sokratis"},{"$set":{"Performance":"0.6"}})
+
+db.playerStats.update({"Name":"Pierre-Emerick Aubameyang"},{"$set":{"Performance":"1.2"}})
+db.playerStats.update({"Name":"Alex Iwobi"},{"$set":{"Performance":"0.7"}})
+db.playerStats.update({"Name":"Aaron Ramsey"},{"$set":{"Performance":"0.6"}})
+db.playerStats.update({"Name":"Petr Cech"},{"$set":{"Performance":"0.7"}})
+db.playerStats.update({"Name":"Lucas Torreira"},{"$set":{"Performance":"0.6"}})
+db.playerStats.update({"Name":"Danny Welbeck"},{"$set":{"Performance":"1.2"}})
+db.playerStats.update({"Name":"Joe Willock"},{"$set":{"Performance":"0.7"}})
+db.playerStats.update({"Name":"Granit Xhaka"},{"$set":{"Performance":"0.6"}})
+db.playerStats.update({"Name":"Mesut Ozil"},{"$set":{"Performance":"0.7"}})
+db.playerStats.update({"Name":"Alexandre Lacazette"},{"$set":{"Performance":"0.6"}})
+
+
+
