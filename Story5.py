@@ -42,5 +42,5 @@ def getMatchSchedule():
     else:
         print("Enter a valid club!") 
 
-getMatchScheduleBasedOnDate()
-#getMatchSchedule()
+#getMatchScheduleBasedOnDate()
+getMatchSchedule()
