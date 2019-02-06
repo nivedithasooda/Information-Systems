@@ -17,28 +17,28 @@ def calcAnnualRevenueGrowth(revenue,year):
 club = input("Please enter the name of the club whose revenue trend you want to see ")
 year = []
 revenue = []
-try:
 
-    clubData = mycol.find_one({"name":club})
-except:
-    print("Unable to proceed")
+
+clubData = mycol.find_one({"name":club})
+
     
-#print(clubData["name"])
-for x in clubData:
+if (mycol.count_documents({"name":club}) != 0):
+    for x in clubData:
     
-    if(x == "AnnualRevenue"):
+        if(x == "AnnualRevenue"):
         
-        for y in clubData[x]:
-            year.append(int(y["Year"]))
-            revenue.append(int(y["Revenue"]))
+            for y in clubData[x]:
+                year.append(int(y["Year"]))
+                revenue.append(int(y["Revenue"]))
 
-calcAnnualRevenueGrowth(revenue,year)
-plt.plot(year,revenue)
-plt.xlabel('Year')
-plt.ylabel('Revenue in millions of Euros')
-plt.show()
+    calcAnnualRevenueGrowth(revenue,year)
+    plt.plot(year,revenue)
+    plt.xlabel('Year')
+    plt.ylabel('Revenue in millions of Euros')
+    plt.show()
 
-
+else:
+    print("Sorry! not able to find the club")
 
 #References : 
 #Calculation of annual revenue growth % : https://www.fool.com/knowledge-center/how-to-calculate-revenue-growth-for-3-years.aspx

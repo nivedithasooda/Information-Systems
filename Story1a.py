@@ -11,6 +11,28 @@ numOfDefenders = input("How many defenders do you need?")
 numOfAttacker = input("How many attackers do you need?")
 numOfMidfielder = input("How many midfielders do you need?")
 
+queryString_partOne = {
+    "$and": [{"Position":{"$regex": "Goalkeeper","$options":"i"}}, {"Performance": {"$gt": 0}}, {"Team": userInputTeam}, {"Fit": "True"}]}
+queryString_partTwo = {"Name": 1, "_id": 0, "Performance": 1, "Position": 1}
+queryString_partThree = "{" " Performance" ":-1}"
+if(mydb.playerStats.count_documents(queryString_partOne) == 0):
+    print("Not enough defenders")
+
+else:
+
+    x = mydb.playerStats.find(queryString_partOne, queryString_partTwo)
+    sortedList = x.sort("Performance", pymongo.DESCENDING)
+    listOfDocuments = sortedList.limit(int(numOfDefenders))
+
+
+    print("---A SUITABLE GOALKEEPER---")
+    #for eachDocument in sortedList:
+     #   print(eachDocument)
+    print(sortedList[0])
+
+
+
+
 if numOfDefenders != 0:
 
     queryString_partOne = {
