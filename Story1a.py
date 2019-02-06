@@ -14,7 +14,7 @@ numOfMidfielder = input("How many midfielders do you need?")
 if numOfDefenders != 0:
 
     queryString_partOne = {
-        "$and": [{"Position": "Defender"}, {"Performance": {"$gt": "0"}}, {"Team": userInputTeam}, {"Fit": "True"}]}
+        "$and": [{"Position":{"$regex": "Defender","$options":"i"}}, {"Performance": {"$gt": 0}}, {"Team": userInputTeam}, {"Fit": "True"}]}
     queryString_partTwo = {"Name": 1, "_id": 0, "Performance": 1, "Position": 1}
     queryString_partThree = "{" " Performance" ":-1}"
     if(mydb.playerStats.count_documents(queryString_partOne) == 0):
@@ -37,11 +37,11 @@ if numOfDefenders != 0:
 if numOfAttacker != 0:
 
     queryString_partOne = {
-        "$and": [{"Position": "Attacker"}, {"Performance": {"$gt": "1"}}, {"Team": userInputTeam}, {"Fit": "True"}]}
+        "$and": [{"Position": {"$regex": "Attacker","$options":"i"}}, {"Performance": {"$gt": 0}}, {"Team": userInputTeam}, {"Fit": "True"}]}
     queryString_partTwo = {"Name": 1, "_id": 0, "Performance": 1, "Position": 1}
     queryString_partThree = "{" " Performance" ":-1}"
     if (mydb.playerStats.count_documents(queryString_partOne) == 0):
-        print("Not enough midfielders")
+        print("Not enough attackers")
     else:
 
         x = mydb.playerStats.find(queryString_partOne, queryString_partTwo)
@@ -55,11 +55,11 @@ if numOfAttacker != 0:
 if numOfMidfielder != 0:
 
     queryString_partOne = {
-        "$and": [{"Position": "Midfielder"}, {"Performance": {"$gt": "0"}}, {"Team": userInputTeam}, {"Fit": "True"}]}
+        "$and": [{"Position": {"$regex": "Midfielder","$options":"i"}}, {"Performance": {"$gt": 0}}, {"Team": userInputTeam}, {"Fit": "True"}]}
     queryString_partTwo = {"Name": 1, "_id": 0, "Performance": 1, "Position": 1}
     queryString_partThree = "{" " Performance" ":-1}"
     if (mydb.playerStats.count_documents(queryString_partOne) == 0):
-        print("Not enough attackers")
+        print("Not enough midfielders")
     else:
 
         x = mydb.playerStats.find(queryString_partOne, queryString_partTwo)
